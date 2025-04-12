@@ -16,11 +16,12 @@ docker_image: third_party
 
 docker_container: docker_image
 	@echo "Starting container $(DOCKER_CONTAINER)..."
-	docker run --name $(DOCKER_CONTAINER) --rm -v "$(CURRENT_DIR):/home/alire-user/workdir" -it $(DOCKER_USER)/$(DOCKER_IMAGE)
-	# [--rm]    Automatically remove the container and its associated anonymous volumes when it exits
-	# [-v list] Bind mount a volume
-	# [-i]      Keep STDIN open even if not attached (--interactive).
-	# [-t]      Allocate a pseudo-TTY (--tty).
+	docker run --name $(DOCKER_CONTAINER) --rm -v "$(CURRENT_DIR):/home/devuser/workdir" -it $(DOCKER_USER)/$(DOCKER_IMAGE)
+# ^
+# [--rm]    Automatically remove the container and its associated anonymous volumes when it exits
+# [-v list] Bind mount a volume
+# [-i]      Keep STDIN open even if not attached (--interactive).
+# [-t]      Allocate a pseudo-TTY (--tty).
 
 clean:
 	@echo "Stopping container $(DOCKER_CONTAINER)..."

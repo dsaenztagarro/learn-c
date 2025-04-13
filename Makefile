@@ -20,7 +20,7 @@ third_party:
 
 docker_image: third_party
 	@echo "  Building image $(DOCKER_IMAGE)..."
-	@docker build -t $(DOCKER_USER)/$(DOCKER_IMAGE) .
+	@docker build -q -t $(DOCKER_USER)/$(DOCKER_IMAGE) .
 
 docker_container: docker_image
 	@echo "  Starting container $(DOCKER_CONTAINER)..."

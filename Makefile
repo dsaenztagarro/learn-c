@@ -1,30 +1,20 @@
 DOCKER_USER ?= "dsaenztagarro"
-DOCKER_IMAGE = "ubuntu24.04-c"
-DOCKER_CONTAINER = "devenv-c"
+IMAGE = "$(DOCKER_USER)/dev-env-c" # docker image
+CONTAINER = "devenv-c" # docker container
 
 CURRENT_DIR := $(shell pwd)
 
-.PHONY: third_party docker_image docker_container clean
+.PHONY: docker_image CONTAINER docker_pause docker_unpause \
+				docker_terminal docker_clean
 
-third_party:
-	@echo " Cleaning third_party folder"
-	@rm -rf third_party
-	@mkdir third_party
-	@touch third_party/.gitkeep
-	@echo " Copy starship.toml to third_party folder"
-	@cp ~/.config/starship.toml third_party/starship.toml
-	@echo " Copy NeoVim config to third_party folder"
-	@cp -rf ~/.config/nvim third_party/nvim/
-# @echo "Copy Nerd Font"
-# @cp -rf ~/.config/nvim third_party/nvim/
-
-docker_image: third_party
-	@echo "  Building image $(DOCKER_IMAGE)..."
-	@docker build -q -t $(DOCKER_USER)/$(DOCKER_IMAGE) .
+docker_image:
+	@echo "  Building image $(IMAGE)..."
+	@docker build -t $(IMAGE) .
+# -q , quiet
 
 docker_container: docker_image
-	@echo "  Starting container $(DOCKER_CONTAINER)..."
-	@docker run --name $(DOCKER_CONTAINER) --rm -v "$(CURRENT_DIR):/home/devuser/workdir" -p 2345:2345 -it $(DOCKER_USER)/$(DOCKER_IMAGE)
+	@echo "  Starting container $(CONTAINER)..."
+	@docker run --detach --name $(CONTAINER) --rm -v "$(CURRENT_DIR):/home/dev/workdir" -it $(IMAGE)
 # ^
 # --rm ,    Automatically remove the container and its associated anonymous volumes when it exits
 # -v list , Bind mount a volume
@@ -32,23 +22,29 @@ docker_container: docker_image
 # -i ,      Keep STDIN open even if not attached (--interactive).
 # -t ,      Allocate a pseudo-TTY (--tty).
 
+docker_start:
+	@echo "  Starting detached container $(CONTAINER)..."
+	@docker run --detach --name $(CONTAINER) --rm -v "$(CURRENT_DIR):/home/dev/workdir" -it $(IMAGE)
+
+docker_stop:
+	@echo "  Stopping container $(CONTAINER)..."
+	@docker stop $(CONTAINER) || true
+	@echo "  Removing container $(CONTAINER)..."
+	@docker rm $(CONTAINER) || true
+
 docker_terminal:
-	@echo "  Starting terminal on existing container $(DOCKER_CONTAINER)..."
-	@docker exec -it $(DOCKER_CONTAINER) /bin/bash
+	@echo "  Starting terminal on existing container $(CONTAINER)..."
+	@docker exec -it $(CONTAINER) /bin/bash
 
 docker_pause:
-	@echo "  Pausing container $(DOCKER_CONTAINER)..."
-	@docker pause $(DOCKER_CONTAINER)
+	@echo "  Pausing container $(CONTAINER)..."
+	@docker pause $(CONTAINER)
 
 docker_unpause:
-	@echo "  Unpausing container $(DOCKER_CONTAINER)..."
-	@docker unpause $(DOCKER_CONTAINER)
+	@echo "  Unpausing container $(CONTAINER)..."
+	@docker unpause $(CONTAINER)
 
-docker_clean:
-	@echo "  Stopping container $(DOCKER_CONTAINER)..."
-	@docker stop $(DOCKER_CONTAINER) || true
-	@echo "  Removing container $(DOCKER_CONTAINER)..."
-	@docker rm $(DOCKER_CONTAINER) || true
-	@echo "  Removing image $(IMAGE_NAME)..."
-	@docker rmi $(DOCKER_IMAGE) || true
+docker_clean: docker_stop
+	@echo "  Removing image $(IMAGE_NAME)..."
+	@docker rmi $(IMAGE):latest || true
 	@echo "Cleanup complete."

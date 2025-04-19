@@ -48,3 +48,12 @@ continue
 
 ## Tasks
 - [ ] Configure DAP adapter in NeoVim so it interacts with GDB running on Docker Container
+
+
+ubuntu:25.04
+359 ⬢ [Docker] ❯ gdb --version
+  1 GNU gdb (Ubuntu 16.2-8ubuntu1) 16.2
+  2 Copyright (C) 2024 Free Software Foundation, Inc.
+  3 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+  4 This is free software: you are free to change and redistribute it.
+  5 There is NO WARRANTY, to the extent permitted by law.

@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <stdio.h> // printf
 #include <stdlib.h> // atoi
 
 unsigned int factorial(unsigned int n)

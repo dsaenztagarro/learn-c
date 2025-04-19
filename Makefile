@@ -1,18 +1,18 @@
 DOCKER_USER ?= "dsaenztagarro"
 IMAGE = "$(DOCKER_USER)/dev-env-c" # docker image
-CONTAINER = "devenv-c" # docker container
+CONTAINER = "dev-env-c" # docker container
 
 CURRENT_DIR := $(shell pwd)
 
-.PHONY: docker_image CONTAINER docker_pause docker_unpause \
-				docker_terminal docker_clean
+.PHONY: image container start stop terminal clean pause unpause \
+				release analyze
 
-docker_image:
+image:
 	@echo "  Building image $(IMAGE)..."
 	@docker build -t $(IMAGE) .
 # -q , quiet
 
-docker_container: docker_image
+container: image
 	@echo "  Starting container $(CONTAINER)..."
 	@docker run --detach --name $(CONTAINER) --rm -v "$(CURRENT_DIR):/home/dev/workdir" -it $(IMAGE)
 # ^
@@ -22,29 +22,40 @@ docker_container: docker_image
 # -i ,      Keep STDIN open even if not attached (--interactive).
 # -t ,      Allocate a pseudo-TTY (--tty).
 
-docker_start:
+start:
 	@echo "  Starting detached container $(CONTAINER)..."
 	@docker run --detach --name $(CONTAINER) --rm -v "$(CURRENT_DIR):/home/dev/workdir" -it $(IMAGE)
 
-docker_stop:
+stop:
 	@echo "  Stopping container $(CONTAINER)..."
 	@docker stop $(CONTAINER) || true
 	@echo "  Removing container $(CONTAINER)..."
 	@docker rm $(CONTAINER) || true
 
-docker_terminal:
-	@echo "  Starting terminal on existing container $(CONTAINER)..."
+terminal:
+	@echo "  Starting terminal on running container $(CONTAINER)..."
 	@docker exec -it $(CONTAINER) /bin/bash
 
-docker_pause:
+pause:
 	@echo "  Pausing container $(CONTAINER)..."
 	@docker pause $(CONTAINER)
 
-docker_unpause:
+unpause:
 	@echo "  Unpausing container $(CONTAINER)..."
 	@docker unpause $(CONTAINER)
 
-docker_clean: docker_stop
+clean: stop
 	@echo "  Removing image $(IMAGE_NAME)..."
 	@docker rmi $(IMAGE):latest || true
 	@echo "Cleanup complete."
+
+# make release DOCKER_VERSION=1.0.2
+release:
+	@git tag -f $(DOCKER_VERSION) head
+	@docker tag $(IMAGE):latest $(IMAGE):$(DOCKER_VERSION)
+	@docker push -f $(IMAGE):$(DOCKER_VERSION)
+
+analyze:
+	@echo "  Analyzing..."
+	@docker scout quickview
+	@docker scout cves local://dsaenztagarro/dev-env-c:latest

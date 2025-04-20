@@ -4,6 +4,7 @@
 int main()
 {
     int c;
+    // ^ 2 bytes (16 bits)
 
     while ((c = getchar()) != EOF)
     //                     ^ precedence of != is higher that that of =, so

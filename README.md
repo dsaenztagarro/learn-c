@@ -18,6 +18,7 @@ gdb -q ./bin/factorial
 # ^
 # -q , --quiet : skip GDB licensing information
 
+gdb -q --args executablename arg1 arg2 arg3
 gdb -q --args ./bin/factorial 3
 #         ^ for passing command line arguments to program
 ```
@@ -28,10 +29,11 @@ gdb -q --args ./bin/factorial 3
 file executable_path
 
 r, run
-r arg1 arg2 ...                    # run program with arguments
-finish                             # run until it completes the function
-n, next
-s, step # inside
+r arg1 arg2 arg3                  # run program with arguments
+set args                          # with no args clear arguments of last run
+finish                            # run until it completes the function
+n, next # step over
+s, step # step into
 q, quit
 
 info functions <regex> # list functions match regex
@@ -57,3 +59,54 @@ ubuntu:25.04
   3 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
   4 This is free software: you are free to change and redistribute it.
   5 There is NO WARRANTY, to the extent permitted by law.
+
+
+### Debugging segmentation fault
+
+```
+⬢ [Docker] ❯ gdb ./bin/segmentation_fault
+Reading symbols from ./bin/segmentation_fault...
+(gdb) r
+Starting program: /home/dev/workdir/bin/segmentation_fault
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/aarch64-linux-gnu/libthread_db.so.1".
+Linux
+
+Program received signal SIGSEGV, Segmentation fault.
+0x0000fffff7e60f58 in __GI__IO_getline_info (fp=fp@entry=0xfffff7fa0880 <_IO_2_1_stdin_>, buf=buf@entry=0x0, n=n@entry=1023, delim=delim@entry=10,
+    extract_delim=extract_delim@entry=1, eof=eof@entry=0x0) at ./libio/iogetline.c:77
+warning: 77     ./libio/iogetline.c: No such file or directory
+
+(gdb) backtrace
+#0  0x0000fffff7e60f58 in __GI__IO_getline_info (fp=fp@entry=0xfffff7fa0880 <_IO_2_1_stdin_>, buf=buf@entry=0x0, n=n@entry=1023, delim=delim@entry=10,
+    extract_delim=extract_delim@entry=1, eof=eof@entry=0x0) at ./libio/iogetline.c:77
+#1  0x0000fffff7e61014 in __GI__IO_getline (fp=fp@entry=0xfffff7fa0880 <_IO_2_1_stdin_>, buf=buf@entry=0x0, n=n@entry=1023, delim=delim@entry=10,
+    extract_delim=extract_delim@entry=1) at ./libio/iogetline.c:34
+#2  0x0000fffff7e5fa74 in _IO_fgets (buf=0x0, n=1024, fp=0xfffff7fa0880 <_IO_2_1_stdin_>) at ./libio/iofgets.c:53
+#3  0x0000aaaaaaaa0890 in main (argc=1, argv=0xfffffffff4f8) at src/segmentation_fault.c:11
+
+So we received the SIGSEV signal from the operating system.
+SIGSEV = Signal Segmentation Violation
+That means we tried to access an invalid memory address.
+
+(gdb) frame 3
+#3  0x0000aaaaaaaa0890 in main (argc=1, argv=0xfffffffff4f8) at src/segmentation_fault.c:11
+warning: Source file is more recent than executable.
+11      //                 Problem: On 32-bit systems, this exceeds the maximum allocatable
+
+(gdb) print buf
+$1 = 0x0
+```
+
+When `buf` pointer contains `0x0`, it means has `NULL` value.
+
+Examples:
+
+```c
+int *ptr = NULL;
+*ptr = 42; // Dereferencing a null pointer triggers SIGSEGV
+
+int arr[10];
+arr[20] = 5; // Accessing out-of-bounds memory triggers SIGSEGV
+```
+

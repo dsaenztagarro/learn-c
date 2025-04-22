@@ -27,14 +27,15 @@ gdb -q --args ./bin/factorial 3
 
 ```bash
 file executable_path
+break main   # set breakpoint at main function
 
 r, run
 r arg1 arg2 arg3                  # run program with arguments
 set args                          # with no args clear arguments of last run
-finish                            # run until it completes the function
-n, next # step over
-s, step # step into
-q, quit
+n next    # step over
+s step    # step into a function
+f finish  # steps out of the current function, stopping at the caller
+q quit    # quit GDB
 
 info functions <regex> # list functions match regex
 break <function_name>
@@ -43,10 +44,51 @@ list                   # to continue listing the file
 list .                 # to return to original debugging position
 list <line_number>
 list <start>,<end>     # print lines in range
+list <function_name>   # print lines after a function
 info breakpoints       # list active breakpoints
 delete
 continue
+
+backtrace  # list stack of functions with SIGSEV
+frame <n>  #
+
+(gdb) frame [N]     # Select frame N (e.g., `frame 2`)
+(gdb) frame         # Show details of the current frame
+(gdb) info frame    # Detailed info about the current frame
+
+(gdb) frame 1       # Switch to frame #1 (caller of the current function)
+(gdb) info locals   # Show local variables in the selected frame
+(gdb) print x       # Print variable `x` in the selected frame
+
+p [/format] [expression]
+(gdb) print i
+(gdb) print /x i   # print number as hexadecimal
+(gdb) print /o i   # print number as octal
+(gdb) print sizeof(i)
+(gdb) print sizeof(&i)
 ```
+
+GDB comes with a powerful tool for directly examing memory: the x command.
+
+The x command examines memory, starting at a particular address.
+
+```bash
+(gdb) x &i
+(gdb) x/4xb &i
+        ^ I want to examine 4 bytes with hexadecimal format
+
+x/[N][F][U] ADDRESS
+```
+
+`x/4xw ptr`	Show 4 words (4 bytes each) in hex at address ptr
+`x/8xb arr`	Show 8 bytes in hex at address arr
+`x/5c arr`	Show 5 bytes as ASCII characters
+`x/s ptr`	  Show a null-terminated string at address ptr
+`x/i $pc`	  Show the instruction at the current program counter
+`x/10d arr`	Show 10 integers in decimal at address arr
+`x/2hf arr`	Show 2 halfwords (2 bytes each) as floats at address arr
+`x`	        Show memory at the last address used (advances automatically)
+
 
 ## Tasks
 - [ ] Configure DAP adapter in NeoVim so it interacts with GDB running on Docker Container
@@ -98,7 +140,9 @@ warning: Source file is more recent than executable.
 $1 = 0x0
 ```
 
-When `buf` pointer contains `0x0`, it means has `NULL` value.
+The value of `buf` is `0x0`, which is the `NULL` pointer.
+malloc returns NULL when it cannot allocate the amount of memory requested.
+So our malloc must have failed.
 
 Examples:
 

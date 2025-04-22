@@ -5,7 +5,16 @@
 int max;                /* maximum length seen so far */
 char line[MAXLINE];     /* current input line */
 char longest[MAXLINE];  /* longest line saved here */
-/* ^ external variables DEFINITION, exactly once, outside of any function */
+/* ^ external variables DEFINITION, exactly once, outside of any function
+ *
+ *   Common practice is to place definitions of all external variables at the
+ *   beginning of the source file, and then omit all extern declarations.
+ *
+ *   The usual practice is to collect extern declarations of variables and
+ *   functions in a separate file, historically called a header, that is included
+ *   by #include at the front of each source file.
+ *   The suffix .h is conventional for header names.
+ */
 
 int my_getline(void);
 void copy(void);

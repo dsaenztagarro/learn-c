@@ -4,8 +4,52 @@ CONTAINER = "dev-env-c" # docker container
 
 CURRENT_DIR := $(shell pwd)
 
-.PHONY: image container start stop terminal clean pause unpause \
+.PHONY: all clean \
+				image container start stop terminal clean pause unpause \
 				release analyze
+
+# Compiler and flags
+CC = gcc
+CFLAGS = -std=c89 -Wall -g
+
+# Directories
+SRC_DIR = src
+BIN_DIR = bin
+
+# Automatically detect all source files and their target executables
+SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
+TARGETS = $(patsubst $(SRC_DIR)/%.c,$(BIN_DIR)/%,$(SRC_FILES))
+#           ^ $(patsubst pattern,replacement,text)
+#             Finds whitespace-separated words in text that match pattern and
+#             replaces them with replacement. Here pattern may contain a ‘%’
+#             which acts as a wildcard, matching any number of any characters
+#             within a word.
+#             If replacement also contains a ‘%’, the ‘%’ is replaced by the text
+#             that matched the ‘%’ in pattern. Words that do not match the
+#             pattern are kept without change in the output. Only the first ‘%’
+#             in the pattern and replacement is treated this way; any subsequent
+#             ‘%’ is unchanged.
+#
+#           	8.2 Functions for String Substitution and Analysis
+#           	https://www.gnu.org/software/make/manual/html_node/Text-Functions.html
+
+
+# Default target: build all executables
+all: $(TARGETS)
+
+# Pattern rule to build each executable
+$(BIN_DIR)/%: $(SRC_DIR)/%.c
+	@mkdir -p $(BIN_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+#                       ^ represents the source file path (src/foo.c)
+#                    ^ represents the target file path (bin/foo)
+
+clean:
+	rm -rf $(BIN_DIR)
+
+##############################################################################
+# DOCKER TASKS
+##############################################################################
 
 image:
 	@echo "  Building image $(IMAGE)..."

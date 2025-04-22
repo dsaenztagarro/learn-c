@@ -5,7 +5,7 @@ CONTAINER = "dev-env-c" # docker container
 CURRENT_DIR := $(shell pwd)
 
 .PHONY: all clean \
-				image container start stop terminal clean pause unpause \
+				image container start stop terminal rmi pause unpause \
 				release analyze
 
 # Compiler and flags
@@ -88,7 +88,7 @@ unpause:
 	@echo "  Unpausing container $(CONTAINER)..."
 	@docker unpause $(CONTAINER)
 
-clean: stop
+rmi: stop
 	@echo "  Removing image $(IMAGE_NAME)..."
 	@docker rmi $(IMAGE):latest || true
 	@echo "Cleanup complete."

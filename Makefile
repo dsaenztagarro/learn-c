@@ -23,6 +23,10 @@ SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
 #               expansion does not normally take place when a variable is set,
 #               or inside the arguments of a function. If you want to do wildcard
 #               expansion in such places, you need to use the wildcard function
+#
+#               4.4.3 The Function wildcard
+#               https://www.gnu.org/software/make/manual/html_node/Wildcard-Function.html
+
 TARGETS = $(patsubst $(SRC_DIR)/%.c,$(BIN_DIR)/%,$(SRC_FILES))
 #           ^ $(patsubst pattern,replacement,text)
 #             Finds whitespace-separated words in text that match pattern and

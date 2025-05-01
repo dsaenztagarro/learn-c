@@ -16,10 +16,11 @@ int main(int argc, char **argv)
      */
 
     fgets(buf, 1024, stdin);
-    printf("%s\n", buf);
     /*             ^ If malloc fails, buf becomes NULL, leading to undefined
      *               behavior (crash) in fgets and printf.
      */
+
+    printf("%s\n", buf);
 
     return 1;
 }

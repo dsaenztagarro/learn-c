@@ -12,6 +12,7 @@ RUN echo 'alias gcc="gcc -std=c11 -pedantic -Wall"' >> ${BASHRC_PATH}
 RUN echo 'alias gdb="gdb --quiet"' >> ${BASHRC_PATH}
 # ^
 # --quiet : skip GDB licensing information
+RUN echo 'export PATH="/home/user/workdir/bin:$PATH"' >> ${BASHRC_PATH}
 
 # Only uncomment once this becomes final
 # RUN sudo rm -rf /var/lib/apt/lists/*

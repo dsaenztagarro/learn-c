@@ -17,15 +17,25 @@ SRC_DIR = src
 BIN_DIR = bin
 
 # Automatically detect all source files and their target executables
-SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
-#             ^ $(wildcard pattern…)
-#               Wildcard expansion happens automatically in rules. But wildcard
-#               expansion does not normally take place when a variable is set,
-#               or inside the arguments of a function. If you want to do wildcard
-#               expansion in such places, you need to use the wildcard function
+SRC_FILES = $(filter-out %.err.c, $(wildcard $(SRC_DIR)/*.c))
+#																  ^
+# 	                $(wildcard pattern…)
+# 	                Wildcard expansion happens automatically in rules. But wildcard
+# 	                expansion does not normally take place when a variable is set,
+# 	                or inside the arguments of a function. If you want to do wildcard
+# 	                expansion in such places, you need to use the wildcard function
 #
-#               4.4.3 The Function wildcard
-#               https://www.gnu.org/software/make/manual/html_node/Wildcard-Function.html
+#                   4.4.3 The Function wildcard
+#               		https://www.gnu.org/software/make/manual/html_node/Wildcard-Function.html
+#
+#           ^
+#   $(filter-out pattern…,text)
+#   Returns all whitespace-separated words in text that do not match any of
+#   the pattern words, removing the words that do match one or more.
+#   This is the exact opposite of the filter function.
+#
+#	  8.2 Functions for String Substitution and Analysis
+#   https://www.gnu.org/software/make/manual/html_node/Text-Functions.html
 
 TARGETS = $(patsubst $(SRC_DIR)/%.c,$(BIN_DIR)/%,$(SRC_FILES))
 #           ^ $(patsubst pattern,replacement,text)

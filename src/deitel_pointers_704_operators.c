@@ -11,8 +11,9 @@ int main()
 
     printf("The address of a is %p\n", &a);
     printf("The address of aPtr is %p\n", &aPtr);
+    /* ^ the address where the address of a is stored */
     printf("The value of aPtr is %p\n\n", aPtr);
-    /* %p extracts address memory as hexadecimal */
+    /* ^ %p extracts address memory as hexadecimal */
 
     printf("The value of a is %d\n", a);
     printf("The value of *aPtr is %d\n\n", *aPtr);

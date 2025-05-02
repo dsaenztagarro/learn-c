@@ -4,7 +4,9 @@
 #include <stdio.h>
 #define SIZE 10
 
+/* alternative: void bubbleSort(int [], const int); */
 void bubbleSort(int *, const int);
+
 
 int main()
 {
@@ -25,6 +27,7 @@ int main()
     return 0;
 }
 
+/* alternative: void bubbleSort(int [], const int size) */
 void bubbleSort(int *array, const int size)
 {
     int pass, j;

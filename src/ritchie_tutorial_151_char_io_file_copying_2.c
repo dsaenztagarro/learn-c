@@ -17,7 +17,7 @@ int main()
 
     printf("EOF: %d", EOF);
 
-    printf("Boolean: %d", getchar() != EOF);
+    printf("Boolean: %d", c != EOF);
 
     return 0;
 }

@@ -1,6 +1,6 @@
 FROM dsaenztagarro/dev-env:1.0.1
 
-RUN sudo apt-get install -y gcc gdb
+RUN sudo apt-get install -y gcc gdb valgrind
 #                            ^ GCC emits debugging information (DWARF format)
 #                              that GDB is specifically designed to understand
 #                              Only If cc is a link to gcc, there is no

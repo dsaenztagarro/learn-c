@@ -1,5 +1,7 @@
 ## learn-c
 
+`EOF`: `Ctrl+d` at an empty prompt sends the ASCII "End of Transmission".
+
 ```bash
 gcc -g -O0 -o bin/factorial -o src/main.c
 # ^

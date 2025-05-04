@@ -15,10 +15,11 @@ CFLAGS = -std=c89 -Wall -g
 # Directories
 SRC_DIR = src
 BIN_DIR = bin
+BUILD_DIR = build
 
 # Automatically detect all source files and their target executables
-SRC_FILES = $(filter-out %.err.c, $(wildcard $(SRC_DIR)/*.c))
-#																  ^
+SRC_FILES = $(filter-out %.err.c $(SRC_DIR)/ritchie_util.c, $(wildcard $(SRC_DIR)/*.c))
+#																                              ^
 # 	                $(wildcard pattern…)
 # 	                Wildcard expansion happens automatically in rules. But wildcard
 # 	                expansion does not normally take place when a variable is set,
@@ -52,19 +53,37 @@ TARGETS = $(patsubst $(SRC_DIR)/%.c,$(BIN_DIR)/%,$(SRC_FILES))
 #           	8.2 Functions for String Substitution and Analysis
 #           	https://www.gnu.org/software/make/manual/html_node/Text-Functions.html
 
+UTIL_OBJ = $(BUILD_DIR)/ritchie_util.o
+
 
 # Default target: build all executables
 all: $(TARGETS)
 
 # Pattern rule to build each executable
-$(BIN_DIR)/%: $(SRC_DIR)/%.c
-	@mkdir -p $(BIN_DIR)
-	$(CC) $(CFLAGS) -o $@ $<
-#                       ^ represents the source file path (src/foo.c)
-#                    ^ represents the target file path (bin/foo)
+$(BIN_DIR)/%: $(SRC_DIR)/%.c $(UTIL_OBJ) | $(BIN_DIR)
+#                                          ^
+#                        order-only-prerequisites: ensure a prerequisite
+#                        exists before building a target but do not trigger
+#                        rebuilds if the prerequisite changes.
+#                        Purpose: Avoid unnecessary rebuilds caused by
+#                        timestamp changes (e.g., directories updating when
+#                        files are added).
+#
+	$(CC) $(CFLAGS) -o $@ $< $(UTIL_OBJ);
+#                     	^ refers to the first prerequisite in the list
+#                     		represents the source file path (src/foo.c)
+#                  	 ^ represents the target file path (bin/foo)
+
+
+$(UTIL_OBJ): $(SRC_DIR)/ritchie_util.c $(SRC_DIR)/ritchie_util.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+#                    ^
+
+$(BIN_DIR) $(BUILD_DIR):
+	mkdir -p $@
 
 clean:
-	rm -rf $(BIN_DIR)
+	rm -rf $(BIN_DIR) $(BUILD_DIR)
 
 ##############################################################################
 # DOCKER TASKS

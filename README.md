@@ -1,6 +1,75 @@
 ## learn-c
 
-`EOF`: `Ctrl+d` at an empty prompt sends the ASCII "End of Transmission".
+### Bookmark
+- 4.3 External variables (getch, ungetch)
+- 5.12 Complicated Declarations
+
+### Running examples
+
+`Ctrl+d` at an empty prompt sends the ASCII "End of Transmission" (i.e. `EOF`).
+
+```
+$ ./bin/<executable>
+....<Enter>
+...<Enter>
+<Ctr+D>
+```
+
+### Complex declarations
+
+```c
+char (*(*f())[])();
+```
+
+* Decomposition:
+  - 1. `f()`: f is a function (no arguments).
+  - 2. `*f()`: Returns a pointer.
+  - 3. `(*f())[]`: Pointer points to an array.
+  - 4. `*(*f())[]`: Array elements are pointers.
+  - 5. `(*(*f())[])()`: Pointers are functions (no arguments) returning char.
+* Result: f is a function returning a pointer to an array of pointers to functions returning char.
+
+#### Key rules
+* **Parentheses** `()` override precedence.
+  Example: `int (*p)[5]` → `p` is a pointer to an array of 5 ints (not an
+  array of pointers).
+* **Right-Left Rule**: Start at the identifier, move right for `[]`/`()`, then
+  left for *, alternating.
+
+#### Practice problems
+
+```c
+char (*(*x())[])()
+```
+
+x: function returning a pointer to array[] of pointer to function returning char.
+
+```c
+char (*(*x[3])())[5]
+```
+
+x: array[3] of pointer to function returning pointer to array[5] of char.
+
+```c
+int (*(*foo)(int))[5]
+```
+
+`foo` is a **pointer to a function** taking `int` and returning a
+**pointer to an array of 5 ints**.
+
+```c
+void (*signal(int, void (*)(int)))(int)
+```
+
+`signal` is a **function** taking `int` and a **pointer to a function**
+taking `int`, returning a **pointer to a function** taking `int` and returning
+`void`.
+
+In short: Declarators define nested type relationships.
+Start with the identifier, apply operators by precedence (parentheses first),
+and build the type outward.
+
+### Compiling manually
 
 ```bash
 gcc -g -O0 -o bin/factorial -o src/main.c
@@ -11,7 +80,7 @@ gcc -g -O0 -o bin/factorial -o src/main.c
 
 gcc -g -o bin/factorial -o src/main.c
 # ^
-# Without -O0 we get only reference to our function (gdb > info functions)
+# Without -O0 we get only reference to our function: `(gdb) info functions`.
 # -std=c11 ,  Ensure C11 standard
 # -pedantic , Ensures that the code strictly adheres to the C11 standard and raises errors for non-standard code, such as some compiler extensions.
 # -Werror ,   Turn warnings into errors
@@ -20,7 +89,7 @@ gdb -q ./bin/factorial
 # ^
 # -q , --quiet : skip GDB licensing information
 
-gdb -q --args executablename arg1 arg2 arg3
+gdb -q --args executable arg1 arg2 arg3
 gdb -q --args ./bin/factorial 3
 #         ^ for passing command line arguments to program
 ```
@@ -155,4 +224,3 @@ int *ptr = NULL;
 int arr[10];
 arr[20] = 5; // Accessing out-of-bounds memory triggers SIGSEGV
 ```
-

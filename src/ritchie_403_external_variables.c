@@ -66,6 +66,7 @@ int main()
 int sp = 0;             /* next free stack position */
 double val[MAXVAL];     /* value stack */
 /* ^ external variables for push and pop
+ *   Not visible before the declaration (hidden to main)
  *   A variable is external if it is defined outside of any function
  */
 

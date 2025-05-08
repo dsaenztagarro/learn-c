@@ -1,7 +1,6 @@
 ## learn-c
 
 ### Bookmark
-- 4.3 External variables (getch, ungetch)
 - 5.12 Complicated Declarations
 
 ### Running examples

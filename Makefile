@@ -21,13 +21,28 @@ LDLIBS = -lm
 # ^ Libraries to pass to the linker/loader
 # 	The name comes from traditional Unix build tool terminology,
 # 	where "ld" is the name of the system linker/loader program.
+#
+# 	What Happens If You Link a Library But Don't Use It?
+# 	If you add -lm (or any other -l<lib>) to your linker command but your
+# 	program does not use any functions or symbols from that library:
+#
+# 	Static Libraries:
+# 	The linker will not include any code from the library in your executable,
+# 	so the size of your executable will not increase. The linker only pulls in
+# 	object code for symbols that are actually referenced by your program.
+#
+# 	Shared Libraries:
+# 	The executable will have a reference to the shared library, but if no
+# 	symbols are used, there is no practical impact on size or runtime.
+# 	The dynamic linker may still note the dependency,
+# 	but it has negligible effect if unused.
 
 # LDFLAGS = ...
 # ^ For linker flags that are not libraries (like -L for library search paths
 # 	or other linker options)
 
 # Automatically detect all source files and their target executables
-SRC_FILES = $(filter-out %.err.c $(SRC_DIR)/rk_util.c, $(wildcard $(SRC_DIR)/*.c))
+SRC_FILES = $(filter-out %.err.c $(SRC_DIR)/kr_util.c, $(wildcard $(SRC_DIR)/*.c))
 #																                              ^
 # 	                $(wildcard pattern…)
 # 	                Wildcard expansion happens automatically in rules. But wildcard
@@ -62,7 +77,7 @@ TARGETS = $(patsubst $(SRC_DIR)/%.c,$(BIN_DIR)/%,$(SRC_FILES))
 #           	8.2 Functions for String Substitution and Analysis
 #           	https://www.gnu.org/software/make/manual/html_node/Text-Functions.html
 
-UTIL_OBJ = $(BUILD_DIR)/rk_util.o
+UTIL_OBJ = $(BUILD_DIR)/kr_util.o
 
 
 # Default target: build all executables
@@ -84,7 +99,7 @@ $(BIN_DIR)/%: $(SRC_DIR)/%.c $(UTIL_OBJ) | $(BIN_DIR)
 #                  	 ^ represents the target file path (bin/foo)
 
 
-$(UTIL_OBJ): $(SRC_DIR)/rk_util.c $(SRC_DIR)/rk_util.h | $(BUILD_DIR)
+$(UTIL_OBJ): $(SRC_DIR)/kr_util.c $(SRC_DIR)/kr_util.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 #                    ^
 
@@ -105,7 +120,7 @@ image:
 
 container: image
 	@echo "  Starting container $(CONTAINER)..."
-	@docker run --detach --name $(CONTAINER) --rm -v "$(CURRENT_DIR):/home/dev/workdir" -it $(IMAGE)
+	@docker run --detach --name $(CONTAINER) --rm -v "$(CURRENT_DIR):/home/dev/wokrdir" -it $(IMAGE)
 # ^
 # --rm ,    Automatically remove the container and its associated anonymous volumes when it exits
 # -v list , Bind mount a volume
@@ -115,7 +130,7 @@ container: image
 
 start:
 	@echo "  Starting detached container $(CONTAINER)..."
-	@docker run --detach --name $(CONTAINER) --rm -v "$(CURRENT_DIR):/home/dev/workdir" -it $(IMAGE)
+	@docker run --detach --name $(CONTAINER) --rm -v "$(CURRENT_DIR):/home/dev/wokrdir" -it $(IMAGE)
 
 stop:
 	@echo "  Stopping container $(CONTAINER)..."

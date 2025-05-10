@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "rk_util.h"
+#include "kr_util.h"
 
 #define MAXLINES 5000       /* max #lines to be sorted */
 
@@ -13,7 +13,7 @@ char *lineptr[MAXLINES];    /* pointers to text lines */
  */
 
 void qsort(char *lineptr[], int left, int right);
-/* See rk_function_410_recursion.c */
+/* See kr_function_410_recursion.c */
 
 /* sort input lines */
 int main()

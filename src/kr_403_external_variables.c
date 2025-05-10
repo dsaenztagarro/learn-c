@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h> /* isdigit */
-#include "rk_util.h" /* getch ungetch */
+#include "kr_util.h" /* getch ungetch */
 
 #define MAXOP   100     /* max size of operand or operator */
 #define NUMBER '0'      /* signal that a number was found */
@@ -79,7 +79,7 @@ void push(double f)
         printf("error: stack full, can't push %g\n", f);
 }
 /*                                             ^
- *         How %g Works:
+ *         How %g Wokrs:
  *         - If the number is small or fits compactly in decimal notation,
  *           %g uses %f style (e.g., 123.45 → 123.45).
  *         - If the number is large or very small, %g uses %e (scientific)

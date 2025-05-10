@@ -1,7 +1,8 @@
 #include <stdio.h> /* getchar */
 #include <string.h> /* strcpy */
 #include <stdlib.h> /* atof */
-#include "rk_util.h"
+#include <ctype.h> /* isalpha isspace */
+#include "kr_util.h"
 
 /***************************
  * 4.3 External variables
@@ -150,7 +151,7 @@ static int getline(char s[], int lim)
  ***************************/
 
 /* numcmp: compare s1 and s2 numerically */
-int numcmp(char *s1, char *s2)
+int numcmp(const char *s1, const char *s2)
 {
     double v1, v2;
 
@@ -163,3 +164,33 @@ int numcmp(char *s1, char *s2)
     else
         return 0;
 }
+
+/**********************************
+ * 6.4 Pointers to Structures
+ * 6.5 Self-referential Structures
+ **********************************/
+
+/* getword: get next word or character from input */
+int getword(char *word, int lim)
+{
+    int c, getch(void);
+    void ungetch(int);
+    char *w = word;
+    while (isspace(c = getch()))
+        ;
+    if (c != EOF)
+        *w++ = c;
+    if (!isalpha(c)) {
+        *w = '\0';
+        return c;
+    }
+    /* ^ single non-white space character that is not a letter */
+    for ( ; --lim > 0; w++)
+        if (!isalnum(*w = getch())) {
+            ungetch(*w);
+            break;
+         }
+    *w = '\0';
+    return word[0];
+}
+

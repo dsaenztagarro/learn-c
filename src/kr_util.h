@@ -10,5 +10,9 @@ void afree(char *p);
 int readlines(char *lineptr[], int nlines);
 void writelines(char *lineptr[], int nlines);
 
-/* 5.11 */
-int numcmp(char *, char *);
+/* 5.11 Pointers to Functions */
+int numcmp(const char *, const char *);
+
+/* 6.4 Pointers to Structures */
+/* 6.5 Self-referential Structures */
+int getword(char *word, int lim);

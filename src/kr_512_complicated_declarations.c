@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h> /* isalpha */
-#include "rk_util.h" /* getch ungetch */
+#include "kr_util.h" /* getch ungetch */
 
 #define MAXTOKEN 100
 

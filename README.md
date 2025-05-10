@@ -1,5 +1,59 @@
 ## learn-c
 
+### Books
+- `deitel`: C How to program (H.M. Deitel / P.J. Deitel)
+- `kr`: The C Programming Language (Brian W. Kernighan / Dennis M. Ritchie)
+- `udemy`: Udemy courses including...
+
+### Compiling manually
+
+GCC under the hood first compiles your source code into object files,
+then calls the linker (`ld`) to produce the final executable,
+linking in libraries like `libm` if requested.
+You can perform these steps manually as follows:
+
+- Step 1: Compile to Object File(s) (No Linking)
+
+  Use the `-c` option to tell GCC to compile only, producing `.o` (object) files:
+
+  ```bash
+  gcc -c myprog.c -o myprog.o
+  ```
+
+  This creates `myprog.o`, containing compiled code but not yet linked into an executable.
+
+  Repeat for any additional source files.
+
+- Step 2: Link Object Files Manually with `ld`
+
+  You can now invoke the linker directly to produce the executable and link in libraries.
+  However, using `ld` directly is tricky because you must specify all startup files,
+  library paths, and more.
+  Instead, it's common and much easier to use GCC as the linker driver
+  (GCC knows which startup files and flags to use):
+
+  ```bash
+  gcc myprog.o -o myprog -lm
+  ```
+
+  This tells GCC to link `myprog.o` and link against the math library (`-lm`).
+
+  GCC invokes `ld` with all the correct options for you.
+
+  **If you really want to call ld directly:**
+
+  You’d need to specify all the required startup files and library paths, e.g.:
+
+  ```bash
+  ld /usr/lib/crt1.o /usr/lib/crti.o myprog.o -lc -lm /usr/lib/crtn.o -o myprog
+  ```
+
+  * `-lc` links the C standard library.
+  * `-lm` links the math library.`
+  * The `crt*.o` files are C runtime startup files.
+  * Paths and required files may vary by system.
+
+
 ### Bookmark
 - 5.12 Complicated Declarations
 

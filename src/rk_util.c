@@ -1,7 +1,7 @@
 #include <stdio.h> /* getchar */
 #include <string.h> /* strcpy */
 #include <stdlib.h> /* atof */
-#include "ritchie_util.h"
+#include "rk_util.h"
 
 /***************************
  * 4.3 External variables

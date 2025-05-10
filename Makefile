@@ -17,8 +17,17 @@ SRC_DIR = src
 BIN_DIR = bin
 BUILD_DIR = build
 
+LDLIBS = -lm
+# ^ Libraries to pass to the linker/loader
+# 	The name comes from traditional Unix build tool terminology,
+# 	where "ld" is the name of the system linker/loader program.
+
+# LDFLAGS = ...
+# ^ For linker flags that are not libraries (like -L for library search paths
+# 	or other linker options)
+
 # Automatically detect all source files and their target executables
-SRC_FILES = $(filter-out %.err.c $(SRC_DIR)/ritchie_util.c, $(wildcard $(SRC_DIR)/*.c))
+SRC_FILES = $(filter-out %.err.c $(SRC_DIR)/rk_util.c, $(wildcard $(SRC_DIR)/*.c))
 #																                              ^
 # 	                $(wildcard pattern…)
 # 	                Wildcard expansion happens automatically in rules. But wildcard
@@ -53,7 +62,7 @@ TARGETS = $(patsubst $(SRC_DIR)/%.c,$(BIN_DIR)/%,$(SRC_FILES))
 #           	8.2 Functions for String Substitution and Analysis
 #           	https://www.gnu.org/software/make/manual/html_node/Text-Functions.html
 
-UTIL_OBJ = $(BUILD_DIR)/ritchie_util.o
+UTIL_OBJ = $(BUILD_DIR)/rk_util.o
 
 
 # Default target: build all executables
@@ -69,13 +78,13 @@ $(BIN_DIR)/%: $(SRC_DIR)/%.c $(UTIL_OBJ) | $(BIN_DIR)
 #                        timestamp changes (e.g., directories updating when
 #                        files are added).
 #
-	$(CC) $(CFLAGS) -o $@ $< $(UTIL_OBJ);
+	$(CC) $(CFLAGS) -o $@ $< $(UTIL_OBJ) $(LDLIBS);
 #                     	^ refers to the first prerequisite in the list
 #                     		represents the source file path (src/foo.c)
 #                  	 ^ represents the target file path (bin/foo)
 
 
-$(UTIL_OBJ): $(SRC_DIR)/ritchie_util.c $(SRC_DIR)/ritchie_util.h | $(BUILD_DIR)
+$(UTIL_OBJ): $(SRC_DIR)/rk_util.c $(SRC_DIR)/rk_util.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 #                    ^
 

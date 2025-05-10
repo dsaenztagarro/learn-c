@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h> /* strcmp */
-#include "ritchie_util.h" /* readlines writelines numcmp */
+#include "rk_util.h" /* readlines writelines numcmp */
 
 #define MAXLINES 5000       /* max #lines to be sorted */
 char *lineptr[MAXLINES];    /* pointers to text lines */

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h> /* isdigit */
-#include "ritchie_util.h" /* getch ungetch */
+#include "rk_util.h" /* getch ungetch */
 
 #define MAXOP   100     /* max size of operand or operator */
 #define NUMBER '0'      /* signal that a number was found */

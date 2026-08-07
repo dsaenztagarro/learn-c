@@ -1,0 +1,8 @@
+# prefix<TAB>human-readable source name
+# The prefix is the tag used in filenames, e.g. prefix "deitel" -> tag "deitel:0712".
+# Lines starting with # are ignored.
+#
+kr	The C Programming Language (Kernighan & Ritchie)
+deitel	C How to Program (Deitel & Deitel)
+linux	The Linux Programming Interface (Kerrisk)
+udemy	Udemy C courses

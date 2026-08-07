@@ -1,0 +1,18 @@
+# learn-c repo config — sourced by ~/Code/learn-repo/bin/* scripts.
+# Shell syntax: KEY="value".
+
+LANG="c"
+
+# Tag placement: the filename encodes the citation, e.g.
+#   deitel_0712_pointers_ptr_2_const_data.c  ->  tag  deitel:0712
+TAG_MODE="filename"
+
+SRC_DIR="src"
+
+# Extensions learn-index scans. Only .c units carry source tags; the shared
+# kr_util.h header is library glue, not a tagged learning unit.
+UNIT_EXT="c"
+
+# Native build verbs (run inside the Linux/glibc Docker container; see README).
+BUILD_CMD="make all"
+TEST_CMD="make test"

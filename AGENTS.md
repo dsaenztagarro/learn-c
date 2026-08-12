@@ -20,13 +20,14 @@ is arranged **physically by source** — the book each unit came from:
 - `docs/REFRESH-LOG.md` — last-refreshed date per stage.
 - `.learnrc` — repo config (`LANG=c`, `TAG_MODE=filename`, build verbs).
 
-## Tags — filename mode
+## Tags — filename shape + header citation
 
-The filename carries the **source** citation; the header carries the **concept**.
+The **folder** is the book, the **`Source:` header** is the citation exidx indexes, and the **filename** is a human name (locator + concept) — the source is never repeated in the filename.
 
-- New unit → `src/<source>/<source>_<locator>_<short_concept>.c`, e.g.
-  `src/deitel/deitel_0712_pointers_ptr_2_const_data.c` → source tag **`deitel:0712`**
-  (Deitel §7.12); `src/kr/kr_604_pointers_to_structures.c` → **`kr:604`**.
+- New unit → `src/<source>/<locator>_<short_concept>.c`, e.g.
+  `src/deitel/ch07_04_pointers_operators.c` with `/* Source: deitel:ch07_04 */` (Deitel §7.4);
+  `src/kr/ch06_04_pointers_to_structures.c` with `/* Source: kr:ch06_04 */`.
+- Zero-pad chapters so files sort in reading order (`ch01`, not `ch1`).
 - The `<source>` prefix MUST exist in `docs/sources/sources.tsv`.
 - Intentionally non-compiling teaching examples end in `.err.c` (the Makefile
   excludes them from build targets).
@@ -40,7 +41,7 @@ Open every `.c` with a block using **C89-clean `/* … */` comments, one per key
 
 ```
 /* Concept: <the ideas this demonstrates — comma-separated, indexed by exidx> */
-/* Source:  <source:locator — optional; the folder + filename already carry it> */
+/* Source:  <source:locator — REQUIRED; the only place exidx reads book/chapter> */
 ```
 
 `Concept:` is **required** — it is the retrieval axis exidx groups by. Teaching
@@ -50,8 +51,8 @@ must be accurate.
 ## When you add or change material
 
 1. Place under the right `src/<source>/`; the book it came from.
-2. Name it `source_locator_concept.c`; ensure the source prefix is in
-   `sources.tsv`; add a `/* Concept: … */` header.
+2. Name it `locator_concept.c` (zero-padded locator); ensure the source prefix is
+   in `sources.tsv`; add `/* Concept: … */` and `/* Source: <source>:<locator> */` headers.
 3. Make sure a ROADMAP stage covers the capability; add a checkpoint line if new.
 4. Reindex so it's findable: `exidx index` (retrieval is exidx, not a repo file).
 
@@ -68,7 +69,7 @@ compiling.
 
 - **By concept / topic / full text** — `exidx search concept=pointers lang=c`, or
   the Neovim Telescope picker. This is the axis the tree no longer encodes.
-- **By source** — browse `src/<source>/`, or grep the tag: `rg "deitel:0712"`.
+- **By source** — browse `src/<source>/`, or grep the tag: `rg "deitel:ch07_04"`.
 
 ## Drill repos are separate
 

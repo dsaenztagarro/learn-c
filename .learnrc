@@ -3,14 +3,14 @@
 
 LANG="c"
 
-# Tag placement: the filename encodes the citation, e.g.
-#   deitel_0712_pointers_ptr_2_const_data.c  ->  tag  deitel:0712
+# Filename shape (the citation lives in each unit's `Source:` header, not the name):
+#   src/deitel/ch07_04_pointers_operators.c  +  /* Source: deitel:ch07_04 */
 TAG_MODE="filename"
 
 SRC_DIR="src"
 
-# Extensions learn-index scans. Only .c units carry source tags; the shared
-# kr_util.h header is library glue, not a tagged learning unit.
+# Unit file extension(s). Only .c units carry tags; the shared kr_util.h header
+# is library glue, not a tagged learning unit.
 UNIT_EXT="c"
 
 # Native build verbs (run inside the Linux/glibc Docker container; see README).

@@ -159,8 +159,8 @@ check-errors:
 	done
 
 test: all check-errors
-	@echo "Smoke-running bin/kr/kr_101_hello_world:"
-	@./$(BIN_DIR)/kr/kr_101_hello_world
+	@echo "Smoke-running bin/kr/ch01_01_hello_world:"
+	@./$(BIN_DIR)/kr/ch01_01_hello_world
 	@echo "OK: portable build + error demos + smoke run."
 
 clean:

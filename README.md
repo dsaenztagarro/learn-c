@@ -5,6 +5,17 @@
 - `kr`: The C Programming Language (Brian W. Kernighan / Dennis M. Ritchie)
 - `udemy`: Udemy courses including...
 
+### Build & run
+
+Run every command **from the repo root** — the `src/<book>/…` and `bin/<book>/…` paths are relative to it.
+The build is one shared Makefile with per-book flag overrides; the doctrine and the full mechanism are in [`AGENTS.md`](AGENTS.md) and `~/Code/learn-repo/docs/guides/build.md`.
+
+- **Build everything (portable books):** `make all` — compiles every unit under `src/<book>/` except `src/linux/` into `bin/<book>/<unit>`. Green on any host with a C compiler.
+- **Run one unit:** `./bin/<book>/<unit>`, e.g. `./bin/kr/ch01_01_hello_world`. Build just that one first with `make bin/kr/ch01_01_hello_world`, or build them all with `make all`.
+- **Run the checks:** `make test` — builds the portable books, confirms the intentional-error `*.err.c` demos still fail to compile, and smoke-runs one unit.
+- **The Linux/glibc book** (`src/linux/`) is platform-bound: build it with `make linux` **inside the dev-env container** (`make image && make start && make terminal`), never natively on macOS. It also needs the TLPI library from `~/Code/learn-linux`.
+- `make clean` removes `bin/` and `build/`.
+
 ### Compiling manually
 
 GCC under the hood first compiles your source code into object files,
@@ -62,7 +73,7 @@ You can perform these steps manually as follows:
 `Ctrl+d` at an empty prompt sends the ASCII "End of Transmission" (i.e. `EOF`).
 
 ```
-$ ./bin/<executable>
+$ ./bin/<book>/<executable>
 ....<Enter>
 ...<Enter>
 <Ctr+D>
@@ -125,13 +136,13 @@ and build the type outward.
 ### Compiling manually
 
 ```bash
-gcc -g -O0 -o bin/factorial -o src/main.c
+gcc -g -O0 -o bin/factorial src/main.c
 # ^
 # -O0 means no optimisation is done
 #     gdb > info functions
 #     ^ it will return many functions from other *.c files
 
-gcc -g -o bin/factorial -o src/main.c
+gcc -g -o bin/factorial src/main.c
 # ^
 # Without -O0 we get only reference to our function: `(gdb) info functions`.
 # -std=c11 ,  Ensure C11 standard

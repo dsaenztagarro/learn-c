@@ -4,6 +4,10 @@ CONTAINER = "dev-env-c" # docker container
 
 CURRENT_DIR := $(shell pwd)
 
+# Where the repo is bind-mounted inside the dev-env container. Username-independent
+# (matches the base image's WORKDIR), so it never changes when DEV_USER does.
+CONTAINER_WORKDIR = /workspace
+
 .PHONY: all linux test check-errors clean \
 				image container start stop terminal rmi pause unpause \
 				release analyze
@@ -177,7 +181,7 @@ image:
 
 container: image
 	@echo "  Starting container $(CONTAINER)..."
-	@docker run --detach --name $(CONTAINER) --rm -v "$(CURRENT_DIR):/home/dev/wokrdir" -it $(IMAGE)
+	@docker run --detach --name $(CONTAINER) --rm -v "$(CURRENT_DIR):$(CONTAINER_WORKDIR)" -w "$(CONTAINER_WORKDIR)" -it $(IMAGE)
 # ^
 # --rm ,    Automatically remove the container and its associated anonymous volumes when it exits
 # -v list , Bind mount a volume
@@ -187,7 +191,7 @@ container: image
 
 start:
 	@echo "  Starting detached container $(CONTAINER)..."
-	@docker run --detach --name $(CONTAINER) --rm -v "$(CURRENT_DIR):/home/dev/wokrdir" -it $(IMAGE)
+	@docker run --detach --name $(CONTAINER) --rm -v "$(CURRENT_DIR):$(CONTAINER_WORKDIR)" -w "$(CONTAINER_WORKDIR)" -it $(IMAGE)
 
 stop:
 	@echo "  Stopping container $(CONTAINER)..."
